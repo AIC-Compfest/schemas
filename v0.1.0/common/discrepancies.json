@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.aic.compfest.id/v0.1.0/common/discrepancies.json",
+  "title": "DiscrepancyTaxonomy",
+  "description": "Standard discrepancy categories, error codes, and reconciliation statuses for the 3PL reconciliation engine.",
+  "definitions": {
+    "ReconciliationStatus": {
+      "type": "string",
+      "enum": [
+        "MATCH",
+        "EXCEPTION",
+        "MISSING",
+        "DUPLICATE",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "description": "High-level deterministic reconciliation state."
+    },
+    "DiscrepancyCategory": {
+      "type": "string",
+      "enum": [
+        "PRICING",
+        "SHIPMENT",
+        "DOCUMENTATION",
+        "TEMPORAL",
+        "SYSTEM_CONFIDENCE"
+      ]
+    },
+    "DiscrepancyCode": {
+      "type": "string",
+      "enum": [
+        "RATE_OVERCHARGE",
+        "WRONG_WEIGHT_TIER",
+        "WRONG_ZONE",
+        "WRONG_FUEL_SURCHARGE",
+        "WRONG_ACCESSORIAL",
+        "SHIPMENT_NOT_FOUND",
+        "DUPLICATE_SHIPMENT",
+        "WRONG_DESTINATION",
+        "WRONG_WEIGHT",
+        "WRONG_SERVICE",
+        "POD_MISSING",
+        "SIGNATURE_MISSING",
+        "POD_DATE_MISMATCH",
+        "INCOMPLETE_DOCUMENT",
+        "OUTSIDE_CONTRACT_VALIDITY",
+        "DISPUTE_WINDOW_NEAR_EXPIRY",
+        "LOW_OCR_CONFIDENCE",
+        "LOW_MATCH_CONFIDENCE",
+        "AMBIGUOUS_EXTRACTION",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "DiscrepancyItem": {
+      "type": "object",
+      "required": ["code", "category", "description", "severity"],
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/DiscrepancyCode"
+        },
+        "category": {
+          "$ref": "#/definitions/DiscrepancyCategory"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable explanation of why this discrepancy occurred."
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["CRITICAL", "WARNING", "INFO"],
+          "description": "Severity level for risk prioritization scoring."
+        },
+        "billed_value": {
+          "description": "Value observed on the invoice / bill."
+        },
+        "expected_value": {
+          "description": "Value expected based on ground truth / contract rate / Surat Jalan."
+        },
+        "delta_amount": {
+          "type": "number",
+          "description": "Financial exposure delta if applicable (e.g. overcharge in IDR)."
+        },
+        "evidence_references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of field names or document IDs backing this finding."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

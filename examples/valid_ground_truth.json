@@ -1,0 +1,40 @@
+{
+  "transaction_id": "TC002-OVERCHARGE-01",
+  "scenario_name": "Fuel Surcharge Overcharge 18% vs 14%",
+  "difficulty_level": 5,
+  "shipment_id": "SHP-000001",
+  "invoice_id": "INV-2026-08101",
+  "vendor_id": "3PL-LOG-001",
+  "origin": "Jakarta",
+  "destination": "Bandung",
+  "service_type": "REGULAR",
+  "shipment_date": "2026-08-10",
+  "weight_kg": 15.0,
+  "quantity": 10,
+  "contract": {
+    "agreement_id": "AGR-3PL-2026-001",
+    "base_rate": 75000,
+    "fuel_surcharge_percent": 14
+  },
+  "expected_charge": 85500,
+  "billed_charge": 95500,
+  "pod": {
+    "delivered": true,
+    "signature_present": true,
+    "stamp_present": true,
+    "delivery_date": "2026-08-11"
+  },
+  "ground_truth": {
+    "status": "EXCEPTION",
+    "discrepancies": [
+      {
+        "code": "RATE_OVERCHARGE",
+        "category": "PRICING",
+        "description": "Billed amount Rp95.500 exceeds expected Rp85.500",
+        "expected_value": 85500,
+        "billed_value": 95500,
+        "delta_amount": 10000
+      }
+    ]
+  }
+}

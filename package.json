@@ -1,0 +1,18 @@
+{
+  "name": "@aic/schemas",
+  "version": "0.1.0",
+  "description": "Single Source of Truth for JSON Schema data contracts in Evidence-First 3PL Invoice Reconciliation Engine",
+  "main": "canonical_schema.json",
+  "scripts": {
+    "validate": "python scripts/validate_schemas.py"
+  },
+  "keywords": [
+    "json-schema",
+    "3pl",
+    "logistics",
+    "reconciliation",
+    "evidence-first"
+  ],
+  "author": "COMPFEST 18 AIC Team",
+  "license": "UNLICENSED"
+}

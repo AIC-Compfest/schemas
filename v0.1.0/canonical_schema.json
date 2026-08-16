@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.aic.compfest.id/v0.1.0/canonical_schema.json",
+  "title": "ShipmentEvent",
+  "description": "Canonical data model reconciling facts across 3PL Invoices, Surat Jalan, PODs, and Rate Agreements into an auditable event.",
+  "type": "object",
+  "required": [
+    "event_id",
+    "shipment_id",
+    "vendor_id",
+    "invoice",
+    "shipment",
+    "pod",
+    "contract",
+    "pricing",
+    "reconciliation"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique canonical event UUID."
+    },
+    "shipment_id": {
+      "type": "string",
+      "description": "Master shipment ID resolved across documents."
+    },
+    "vendor_id": {
+      "type": "string",
+      "description": "Normalized identifier of the 3PL logistics provider."
+    },
+    "match_confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Entity resolution composite score (0.0 to 1.0) linking documents."
+    },
+    "invoice": {
+      "type": "object",
+      "required": ["invoice_id", "invoice_number", "billed_amount", "invoice_date"],
+      "properties": {
+        "invoice_id": { "type": "string" },
+        "invoice_number": { "type": "string" },
+        "line_number": { "type": "integer" },
+        "invoice_date": { "type": "string", "format": "date" },
+        "service_type": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "weight_billed_kg": { "type": "number" },
+        "base_charge_billed": { "type": "number" },
+        "fuel_surcharge_billed": { "type": "number" },
+        "fuel_surcharge_percent_billed": { "type": "number" },
+        "accessorial_charges_billed": { "type": "number", "default": 0 },
+        "tax_billed": { "type": "number", "default": 0 },
+        "billed_amount": { "type": "number", "description": "Total charge billed on this invoice line item." },
+        "currency": { "type": "string", "default": "IDR" }
+      },
+      "additionalProperties": false
+    },
+    "shipment": {
+      "type": "object",
+      "required": ["surat_jalan_number", "shipment_date", "origin", "destination", "weight_actual_kg"],
+      "properties": {
+        "surat_jalan_number": { "type": "string" },
+        "shipment_date": { "type": "string", "format": "date" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "weight_actual_kg": { "type": "number", "description": "Physical gross weight scale measurement." },
+        "total_packages": { "type": "integer" },
+        "item_description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "pod": {
+      "type": "object",
+      "required": ["pod_number", "delivery_status", "signature_present"],
+      "properties": {
+        "pod_number": { "type": "string" },
+        "delivery_status": {
+          "type": "string",
+          "enum": ["DELIVERED", "PARTIALLY_DELIVERED", "FAILED", "RETURNED", "MISSING"]
+        },
+        "delivery_date": { "type": "string", "format": "date" },
+        "receiver_name": { "type": "string" },
+        "signature_present": { "type": "boolean" },
+        "signature_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "stamp_present": { "type": "boolean" },
+        "condition": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "contract": {
+      "type": "object",
+      "required": ["agreement_id", "matched_rule_id", "base_rate"],
+      "properties": {
+        "agreement_id": { "type": "string" },
+        "matched_rule_id": { "type": "string" },
+        "effective_from": { "type": "string", "format": "date" },
+        "effective_to": { "type": "string", "format": "date" },
+        "rate_unit": { "type": "string" },
+        "base_rate": { "type": "number" },
+        "applicable_fuel_surcharge_percent": { "type": "number" },
+        "dispute_window_days": { "type": "integer", "default": 30 }
+      },
+      "additionalProperties": false
+    },
+    "pricing": {
+      "type": "object",
+      "required": [
+        "expected_base_charge",
+        "expected_fuel_surcharge",
+        "expected_total_charge",
+        "difference_amount",
+        "is_material"
+      ],
+      "properties": {
+        "expected_base_charge": { "type": "number", "description": "Calculated by deterministic Go engine." },
+        "expected_fuel_surcharge": { "type": "number" },
+        "expected_accessorial_charges": { "type": "number", "default": 0 },
+        "expected_tax": { "type": "number", "default": 0 },
+        "expected_total_charge": { "type": "number", "description": "Total expected payable amount." },
+        "difference_amount": {
+          "type": "number",
+          "description": "Billed Total - Expected Total (positive indicates overcharge, negative indicates undercharge)."
+        },
+        "relative_difference_ratio": {
+          "type": "number",
+          "description": "abs(difference) / expected_charge"
+        },
+        "is_material": {
+          "type": "boolean",
+          "description": "True if difference exceeds configured absolute or relative materiality threshold."
+        },
+        "calculation_trace": {
+          "type": "string",
+          "description": "Human-readable mathematical trace of the pricing calculation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "reconciliation": {
+      "type": "object",
+      "required": ["status", "discrepancies", "requires_human_review", "priority_score"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["MATCH", "EXCEPTION", "MISSING", "DUPLICATE", "INSUFFICIENT_EVIDENCE"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "discrepancies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "category", "description", "severity"],
+            "properties": {
+              "code": { "type": "string" },
+              "category": { "type": "string" },
+              "description": { "type": "string" },
+              "severity": { "type": "string", "enum": ["CRITICAL", "WARNING", "INFO"] },
+              "billed_value": {},
+              "expected_value": {},
+              "delta_amount": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "requires_human_review": {
+          "type": "boolean",
+          "description": "Mandatory human review flag (PRD §28 & §34)."
+        },
+        "priority_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Risk score computed from financial exposure, urgency, and uncertainty."
+        },
+        "dispute_deadline": {
+          "type": "string",
+          "format": "date",
+          "description": "Calculated dispute deadline based on invoice date + dispute window."
+        },
+        "days_remaining_to_dispute": {
+          "type": "integer",
+          "description": "Remaining days before dispute window expires."
+        }
+      },
+      "additionalProperties": false
+    },
+    "review_decision": {
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "enum": ["APPROVE", "DISPUTE", "REJECT"] },
+        "reviewer_id": { "type": "string" },
+        "reviewer_role": { "type": "string", "default": "AP_MANAGER" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "audit_trail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "action", "actor_id", "previous_status", "new_status"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "action": { "type": "string" },
+          "actor_id": { "type": "string" },
+          "actor_role": { "type": "string" },
+          "previous_status": { "type": "string" },
+          "new_status": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

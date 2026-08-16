@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.aic.compfest.id/v0.1.0/ground_truth_schema.json",
+  "title": "GroundTruthTransaction",
+  "description": "Ground truth definition for synthetic benchmark transactions defining absolute known business facts and expected reconciliation results.",
+  "type": "object",
+  "required": [
+    "transaction_id",
+    "shipment_id",
+    "invoice_id",
+    "vendor_id",
+    "origin",
+    "destination",
+    "service_type",
+    "shipment_date",
+    "weight_kg",
+    "contract",
+    "expected_charge",
+    "billed_charge",
+    "pod",
+    "ground_truth"
+  ],
+  "properties": {
+    "transaction_id": {
+      "type": "string",
+      "description": "Synthetic benchmark test case ID (e.g. TXN-000001 / TC001)."
+    },
+    "scenario_name": {
+      "type": "string",
+      "description": "Human-readable scenario title (e.g. Clean MATCH, Rate Overcharge 18% vs 14%, Missing Signature)."
+    },
+    "difficulty_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Dataset difficulty level from 1 (Clean) to 5 (Adversarial Business Cases)."
+    },
+    "shipment_id": { "type": "string" },
+    "invoice_id": { "type": "string" },
+    "vendor_id": { "type": "string" },
+    "origin": { "type": "string" },
+    "destination": { "type": "string" },
+    "service_type": { "type": "string" },
+    "shipment_date": { "type": "string", "format": "date" },
+    "weight_kg": { "type": "number", "minimum": 0 },
+    "quantity": { "type": "integer", "minimum": 1 },
+    "contract": {
+      "type": "object",
+      "required": ["agreement_id", "base_rate", "fuel_surcharge_percent"],
+      "properties": {
+        "agreement_id": { "type": "string" },
+        "base_rate": { "type": "number" },
+        "fuel_surcharge_percent": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "expected_charge": {
+      "type": "number",
+      "description": "Mathematically exact expected payable amount according to contract rules."
+    },
+    "billed_charge": {
+      "type": "number",
+      "description": "Amount printed and billed on the synthetic invoice."
+    },
+    "pod": {
+      "type": "object",
+      "required": ["delivered", "signature_present", "stamp_present"],
+      "properties": {
+        "delivered": { "type": "boolean" },
+        "signature_present": { "type": "boolean" },
+        "stamp_present": { "type": "boolean" },
+        "delivery_date": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": ["status", "discrepancies"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["MATCH", "EXCEPTION", "MISSING", "DUPLICATE", "INSUFFICIENT_EVIDENCE"]
+        },
+        "discrepancies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "category", "description"],
+            "properties": {
+              "code": { "type": "string" },
+              "category": { "type": "string" },
+              "description": { "type": "string" },
+              "expected_value": {},
+              "billed_value": {},
+              "delta_amount": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

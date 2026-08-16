@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.aic.compfest.id/v0.1.0/surat_jalan_schema.json",
+  "title": "SuratJalanDocument",
+  "description": "Structured extraction schema for Surat Jalan (Delivery Order / Dispatch Note) documents.",
+  "type": "object",
+  "required": [
+    "document_id",
+    "surat_jalan_number",
+    "shipment_id",
+    "shipment_date",
+    "sender",
+    "receiver",
+    "weight_kg"
+  ],
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Internal document asset UUID."
+    },
+    "surat_jalan_number": {
+      "type": "string",
+      "description": "Printed Surat Jalan reference number (e.g. SJ-2026-08101)."
+    },
+    "shipment_id": {
+      "type": "string",
+      "description": "Shipment reference ID linking to invoice and POD."
+    },
+    "awb_number": {
+      "type": "string",
+      "description": "Air Waybill / Tracking number if printed."
+    },
+    "shipment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date goods departed the warehouse (YYYY-MM-DD)."
+    },
+    "sender": {
+      "type": "object",
+      "required": ["name", "city"],
+      "properties": {
+        "name": { "type": "string", "description": "Origin shipper or warehouse name." },
+        "address": { "type": "string", "description": "Full street address if available." },
+        "city": { "type": "string", "description": "Origin city or zone (e.g. Jakarta, Surabaya)." },
+        "contact": { "type": "string", "description": "Shipper phone / contact." }
+      },
+      "additionalProperties": false
+    },
+    "receiver": {
+      "type": "object",
+      "required": ["name", "city"],
+      "properties": {
+        "name": { "type": "string", "description": "Destination recipient / consignee name." },
+        "address": { "type": "string", "description": "Full delivery street address." },
+        "city": { "type": "string", "description": "Destination city or zone (e.g. Bandung, Medan)." },
+        "contact": { "type": "string", "description": "Recipient phone / contact." }
+      },
+      "additionalProperties": false
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_description", "quantity"],
+        "properties": {
+          "item_code": { "type": "string" },
+          "item_description": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 },
+          "unit": { "type": "string", "default": "PCS" },
+          "weight_kg": { "type": "number", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total_packages": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total collis / carton box count."
+    },
+    "weight_kg": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Actual physical gross scale weight in kilograms recorded at origin."
+    },
+    "volume_cbm": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Volume cubic meters if recorded."
+    },
+    "driver_name": {
+      "type": "string",
+      "description": "Name of the courier / truck driver."
+    },
+    "vehicle_plate_number": {
+      "type": "string",
+      "description": "Vehicle registration plate (e.g. B 9123 XYZ)."
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "common/evidence.json"
+      },
+      "description": "Traceable bounding box evidence for each extracted field."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,57 @@
+{
+  "document_id": "doc-rate-001",
+  "agreement_id": "AGR-3PL-2026-001",
+  "vendor_id": "3PL-LOG-001",
+  "vendor_name": "PT Cepat Logistik Nusantara",
+  "effective_from": "2026-01-01",
+  "effective_to": "2026-12-31",
+  "currency": "IDR",
+  "rate_rules": [
+    {
+      "origin_zone": "JAKARTA",
+      "destination_zone": "BANDUNG",
+      "service_type": "REGULAR",
+      "weight_min_kg": 10.0,
+      "weight_max_kg": 20.0,
+      "base_rate": 75000,
+      "rate_unit": "FLAT_PER_SHIPMENT",
+      "sla_days": 2
+    },
+    {
+      "origin_zone": "JAKARTA",
+      "destination_zone": "SURABAYA",
+      "service_type": "REGULAR",
+      "weight_min_kg": 10.0,
+      "weight_max_kg": 20.0,
+      "base_rate": 125000,
+      "rate_unit": "FLAT_PER_SHIPMENT",
+      "sla_days": 3
+    }
+  ],
+  "surcharge_rules": [
+    {
+      "type": "FUEL",
+      "calculation_method": "PERCENTAGE_OF_BASE",
+      "value": 14,
+      "description": "Standard national fuel surcharge (14% of base rate)."
+    }
+  ],
+  "minimum_charge": 50000,
+  "tax_percent": 11,
+  "dispute_window_days": 45,
+  "evidence": [
+    {
+      "field_name": "fuel_surcharge_rule",
+      "raw_value": "Fuel Surcharge 14%",
+      "normalized_value": 14,
+      "confidence": 0.99,
+      "source": {
+        "document_id": "doc-rate-001",
+        "document_type": "RATE_AGREEMENT",
+        "page_number": 2,
+        "bbox": [100, 300, 400, 340]
+      },
+      "extraction_method": "ocr"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "document_id": "doc-inv-001",
+  "invoice_number": "INV-2026-08101",
+  "vendor_id": "3PL-LOG-001",
+  "vendor_name": "PT Cepat Logistik Nusantara",
+  "customer_id": "CUST-888",
+  "customer_name": "PT Maju Terus Retail",
+  "billing_period_start": "2026-08-01",
+  "billing_period_end": "2026-08-15",
+  "invoice_date": "2026-08-16",
+  "due_date": "2026-09-15",
+  "currency": "IDR",
+  "subtotal": 95500,
+  "tax_amount": 0,
+  "grand_total": 95500,
+  "line_items": [
+    {
+      "line_number": 1,
+      "shipment_id": "SHP-000001",
+      "awb_number": "AWB77829391",
+      "service_type": "REGULAR",
+      "origin": "Jakarta",
+      "destination": "Bandung",
+      "weight_kg": 15.0,
+      "quantity": 10,
+      "base_charge": 75000,
+      "fuel_surcharge": 17190,
+      "fuel_surcharge_percent": 18,
+      "accessorial_charges": [],
+      "billed_amount": 95500
+    }
+  ],
+  "evidence": [
+    {
+      "field_name": "invoice_number",
+      "raw_value": "INV-2026-08101",
+      "normalized_value": "INV-2026-08101",
+      "confidence": 0.99,
+      "source": {
+        "document_id": "doc-inv-001",
+        "document_type": "INVOICE",
+        "page_number": 1,
+        "bbox": [120, 80, 350, 120]
+      },
+      "extraction_method": "ocr"
+    },
+    {
+      "field_name": "grand_total",
+      "raw_value": "Rp 95.500",
+      "normalized_value": 95500,
+      "confidence": 0.98,
+      "source": {
+        "document_id": "doc-inv-001",
+        "document_type": "INVOICE",
+        "page_number": 1,
+        "bbox": [450, 780, 580, 820]
+      },
+      "extraction_method": "layout_table"
+    }
+  ]
+}

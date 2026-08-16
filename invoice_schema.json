@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.aic.compfest.id/v0.1.0/invoice_schema.json",
+  "title": "InvoiceDocument",
+  "description": "Structured extraction schema for 3PL Invoice documents.",
+  "type": "object",
+  "required": [
+    "document_id",
+    "invoice_number",
+    "vendor_id",
+    "vendor_name",
+    "invoice_date",
+    "currency",
+    "grand_total",
+    "line_items"
+  ],
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Internal document asset UUID."
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Invoice reference number printed on the document."
+    },
+    "vendor_id": {
+      "type": "string",
+      "description": "Normalized identifier of the 3PL logistics provider."
+    },
+    "vendor_name": {
+      "type": "string",
+      "description": "Commercial name of the logistics provider."
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Customer account identifier if present."
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Customer entity billed on the invoice."
+    },
+    "billing_period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of the billing period (YYYY-MM-DD)."
+    },
+    "billing_period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of the billing period (YYYY-MM-DD)."
+    },
+    "invoice_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the invoice was issued (YYYY-MM-DD)."
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Payment due date (YYYY-MM-DD)."
+    },
+    "currency": {
+      "type": "string",
+      "default": "IDR",
+      "description": "3-letter ISO currency code (default: IDR)."
+    },
+    "subtotal": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Subtotal before taxes/discounts in integer/float amount."
+    },
+    "tax_amount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Applicable VAT/PPN tax amount."
+    },
+    "grand_total": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Final total billed amount on invoice."
+    },
+    "line_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["line_number", "shipment_id", "billed_amount"],
+        "properties": {
+          "line_number": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1-indexed row number in the invoice table."
+          },
+          "shipment_id": {
+            "type": "string",
+            "description": "Shipment reference or tracking number."
+          },
+          "awb_number": {
+            "type": "string",
+            "description": "Air Waybill / Consignment Note number."
+          },
+          "service_type": {
+            "type": "string",
+            "description": "Service tier (e.g. REGULAR, EXPRESS, TRUCKING)."
+          },
+          "origin": {
+            "type": "string",
+            "description": "Shipment origin city/hub."
+          },
+          "destination": {
+            "type": "string",
+            "description": "Shipment destination city/hub."
+          },
+          "weight_kg": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Billed chargeable weight in kilograms."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Package or piece count."
+          },
+          "base_charge": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Base freight charge."
+          },
+          "fuel_surcharge": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Fuel surcharge nominal amount billed."
+          },
+          "fuel_surcharge_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Fuel surcharge percentage rate (e.g. 14 for 14%)."
+          },
+          "accessorial_charges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "amount"],
+              "properties": {
+                "type": { "type": "string", "description": "e.g. PACKING, INSURANCE, LIFTGATE, TOLL" },
+                "amount": { "type": "number", "minimum": 0 }
+              }
+            }
+          },
+          "billed_amount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total charge for this line item."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "common/evidence.json"
+      },
+      "description": "Traceable bounding box evidence for each extracted critical field."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,48 @@
+{
+  "document_id": "doc-sj-001",
+  "surat_jalan_number": "SJ-2026-08101",
+  "shipment_id": "SHP-000001",
+  "awb_number": "AWB77829391",
+  "shipment_date": "2026-08-10",
+  "sender": {
+    "name": "Warehouse Utama Jakarta",
+    "address": "Jl. Logistik Raya No. 12, Cakung",
+    "city": "Jakarta",
+    "contact": "+628111222333"
+  },
+  "receiver": {
+    "name": "PT Maju Terus Retail - Bandung Store",
+    "address": "Jl. Asia Afrika No. 45",
+    "city": "Bandung",
+    "contact": "+628123456789"
+  },
+  "items": [
+    {
+      "item_code": "ITM-001",
+      "item_description": "Elektronik & Aksesoris Retail",
+      "quantity": 10,
+      "unit": "BOX",
+      "weight_kg": 15.0
+    }
+  ],
+  "total_packages": 10,
+  "weight_kg": 15.0,
+  "volume_cbm": 0.12,
+  "driver_name": "Agus Supriyadi",
+  "vehicle_plate_number": "B 9876 CAK",
+  "evidence": [
+    {
+      "field_name": "weight_kg",
+      "raw_value": "15 KG",
+      "normalized_value": 15.0,
+      "confidence": 0.98,
+      "source": {
+        "document_id": "doc-sj-001",
+        "document_type": "SURAT_JALAN",
+        "page_number": 1,
+        "bbox": [320, 450, 410, 480]
+      },
+      "extraction_method": "ocr"
+    }
+  ]
+}

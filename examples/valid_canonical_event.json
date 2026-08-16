@@ -1,0 +1,118 @@
+{
+  "event_id": "evt-000001",
+  "shipment_id": "SHP-000001",
+  "vendor_id": "3PL-LOG-001",
+  "match_confidence": 0.98,
+  "invoice": {
+    "invoice_id": "doc-inv-001",
+    "invoice_number": "INV-2026-08101",
+    "line_number": 1,
+    "invoice_date": "2026-08-16",
+    "service_type": "REGULAR",
+    "origin": "Jakarta",
+    "destination": "Bandung",
+    "weight_billed_kg": 15.0,
+    "base_charge_billed": 75000,
+    "fuel_surcharge_billed": 17190,
+    "fuel_surcharge_percent_billed": 18,
+    "accessorial_charges_billed": 0,
+    "tax_billed": 0,
+    "billed_amount": 95500,
+    "currency": "IDR"
+  },
+  "shipment": {
+    "surat_jalan_number": "SJ-2026-08101",
+    "shipment_date": "2026-08-10",
+    "origin": "Jakarta",
+    "destination": "Bandung",
+    "weight_actual_kg": 15.0,
+    "total_packages": 10,
+    "item_description": "Elektronik & Aksesoris Retail"
+  },
+  "pod": {
+    "pod_number": "POD-2026-08101",
+    "delivery_status": "DELIVERED",
+    "delivery_date": "2026-08-11",
+    "receiver_name": "Budi Santoso",
+    "signature_present": true,
+    "signature_confidence": 0.96,
+    "stamp_present": true,
+    "condition": "GOOD"
+  },
+  "contract": {
+    "agreement_id": "AGR-3PL-2026-001",
+    "matched_rule_id": "RULE-JKT-BDO-REG-10-20",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31",
+    "rate_unit": "FLAT_PER_SHIPMENT",
+    "base_rate": 75000,
+    "applicable_fuel_surcharge_percent": 14,
+    "dispute_window_days": 45
+  },
+  "pricing": {
+    "expected_base_charge": 75000,
+    "expected_fuel_surcharge": 10500,
+    "expected_accessorial_charges": 0,
+    "expected_tax": 0,
+    "expected_total_charge": 85500,
+    "difference_amount": 10000,
+    "relative_difference_ratio": 0.117,
+    "is_material": true,
+    "calculation_trace": "Base: 75000, Fuel (14% of 75000): 10500 => Total Expected: 85500 IDR vs Billed: 95500 IDR (Diff: +10000 IDR)"
+  },
+  "reconciliation": {
+    "status": "EXCEPTION",
+    "reason_codes": ["RATE_OVERCHARGE", "WRONG_FUEL_SURCHARGE"],
+    "discrepancies": [
+      {
+        "code": "RATE_OVERCHARGE",
+        "category": "PRICING",
+        "description": "Invoice grand total Rp95.500 exceeds contract expected rate Rp85.500 by Rp10.000.",
+        "severity": "CRITICAL",
+        "billed_value": 95500,
+        "expected_value": 85500,
+        "delta_amount": 10000
+      },
+      {
+        "code": "WRONG_FUEL_SURCHARGE",
+        "category": "PRICING",
+        "description": "Invoice applied 18% fuel surcharge instead of agreed contract 14% rate.",
+        "severity": "CRITICAL",
+        "billed_value": 18,
+        "expected_value": 14,
+        "delta_amount": 6690
+      }
+    ],
+    "requires_human_review": true,
+    "priority_score": 85.5,
+    "dispute_deadline": "2026-09-30",
+    "days_remaining_to_dispute": 45
+  },
+  "review_decision": {
+    "action": "DISPUTE",
+    "reviewer_id": "user-ap-01",
+    "reviewer_role": "AP_MANAGER",
+    "timestamp": "2026-08-16T15:30:00Z",
+    "reason": "Fuel surcharge billed at 18% exceeds contract rate of 14%."
+  },
+  "audit_trail": [
+    {
+      "timestamp": "2026-08-16T15:00:00Z",
+      "action": "AUTOMATED_RECONCILIATION_COMPLETED",
+      "actor_id": "system",
+      "actor_role": "SYSTEM",
+      "previous_status": "PROCESSING",
+      "new_status": "EXCEPTION",
+      "notes": "Reconciliation engine flagged rate overcharge."
+    },
+    {
+      "timestamp": "2026-08-16T15:30:00Z",
+      "action": "HUMAN_DISPUTE_SUBMITTED",
+      "actor_id": "user-ap-01",
+      "actor_role": "AP_MANAGER",
+      "previous_status": "EXCEPTION",
+      "new_status": "DISPUTED",
+      "notes": "Dispute package generated for PT Cepat Logistik Nusantara."
+    }
+  ]
+}
