@@ -143,7 +143,7 @@
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["MATCH", "EXCEPTION", "MISSING", "DUPLICATE", "INSUFFICIENT_EVIDENCE"]
+          "enum": ["MATCH", "EXCEPTION", "MISSING", "DUPLICATE", "INSUFFICIENT_EVIDENCE", "APPROVED", "DISPUTED", "REJECTED", "RESOLVED"]
         },
         "reason_codes": {
           "type": "array",
